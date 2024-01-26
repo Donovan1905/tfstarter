@@ -33,7 +33,7 @@ fn main() {
                     println!("{}", _template);
                 }
                 None => {
-                    println!("Please provide a string to reverse");
+                    println!("Error : missing template ref. See tfstarter generate -h");
                 }
             }
         }
