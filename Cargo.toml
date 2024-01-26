@@ -9,6 +9,7 @@ homepage = "https://github.com/Donovan1905/tfstarter"
 repository = "https://github.com/Donovan1905/tfstarter"
 keywords = ["cli", "terraform", "template"]
 categories = ["command-line-utilities"]
+edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
