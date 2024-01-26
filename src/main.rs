@@ -16,6 +16,7 @@ enum Commands {
 
 #[derive(Args)]
 struct Generate {
+    #[arg(short, long, help = "Name of the template you want to use (based on folder name of the template)")]
     template: Option<String> 
 }
 
