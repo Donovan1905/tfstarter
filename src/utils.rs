@@ -1,7 +1,10 @@
-use std::path::Path;
 use std::fs;
+use std::path::Path;
 
-pub fn copy_dir_all(src: impl AsRef<Path>, dst: impl AsRef<Path>) -> Result<(), Box<dyn std::error::Error>> {
+pub fn copy_dir_all(
+    src: impl AsRef<Path>,
+    dst: impl AsRef<Path>,
+) -> Result<(), Box<dyn std::error::Error>> {
     fs::create_dir_all(&dst).expect("Failed to create dir");
     for entry in fs::read_dir(src)? {
         let entry = entry?;
