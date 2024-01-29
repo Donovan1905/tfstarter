@@ -1,10 +1,10 @@
 use clap::{Args, Parser, Subcommand};
 use colored::Colorize;
-use std::{env, fs, io, path::PathBuf};
+use std::{env, path::PathBuf};
 
+mod commands;
 mod init;
 mod utils;
-mod commands;
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -69,24 +69,7 @@ fn main() {
         },
         Some(Commands::Get(ttype)) => match ttype.ttype {
             Some(ref _ttype) => {
-                let entries = fs::read_dir(src)
-                    .expect("Error : Failed to read templates folder")
-                    .map(|res| res.map(|e| e.path()))
-                    .collect::<Result<Vec<_>, io::Error>>()
-                    .unwrap();
-
-                for tpl in &entries {
-                    println!(
-                        "> {}",
-                        tpl.into_iter()
-                            .last()
-                            .unwrap()
-                            .to_str()
-                            .unwrap()
-                            .bold()
-                            .purple()
-                    )
-                }
+                commands::get(src).expect("Failed to list templates");
             }
             None => {
                 println!("Error : missing type")
