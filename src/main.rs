@@ -16,6 +16,7 @@ struct Cli {
 enum Commands {
     Get(Get),
     Generate(Generate),
+    Replace(Replace)
 }
 
 #[derive(Args)]
@@ -33,6 +34,16 @@ struct Get {
     #[arg(short, long, help = "Filter by tag (coming soon)")]
     #[clap(default_value = "A")]
     ttype: Option<String>,
+}
+
+#[derive(Args)]
+struct Replace {
+    #[arg(short, long)]
+    template: Option<String>,
+    #[arg(short, long)]
+    placeholder: Option<String>,
+    #[arg(short, long)]
+    replace_with: Option<String>,
 }
 
 fn main() {
@@ -79,6 +90,17 @@ fn main() {
             }
             None => {
                 println!("Error : missing type")
+            }
+        },
+        Some(Commands::Replace(arg)) => match arg.template {
+            Some(ref _template) => {
+                src.push(_template);
+                println!("{:?}", src);
+                utils::replace_tag_with_string(src, arg.placeholder.as_ref().unwrap().to_owned(), arg.replace_with.as_ref().unwrap().to_owned()).unwrap();
+                println!("{}", _template);
+            }
+            None => {
+                println!("Error : missing template ref. See tfstarter generate -h");
             }
         },
         None => {
