@@ -1,6 +1,6 @@
 [package]
 name = "tfstarter"
-version = "0.3.0"
+version = "0.3.1"
 authors = ["Donovan HOANG <donovanhoang.pro@gmail.com>"]
 license = "Apache-2.0"
 description = "A tool to store terraform project templates and copy then on the fly"
