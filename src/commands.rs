@@ -2,7 +2,6 @@ use colored::Colorize;
 use std::{env, fs::read_dir, io, path::Path};
 
 use crate::utils;
-use crate::utils::list_tags_in_template;
 
 pub fn generate(template: impl AsRef<Path>) -> Result<(), Box<dyn std::error::Error>> {
     let dst = env::current_dir().unwrap();
@@ -46,7 +45,7 @@ pub fn replace(path: impl AsRef<Path>) -> Result<(), Box<dyn std::error::Error>>
             placeholder.clone().bold().bright_purple()
         );
         match io::stdin().read_line(&mut input) {
-            Ok(n) => {
+            Ok(_n) => {
                 utils::replace_tag_with_string_all(dst.clone(), placeholder.clone(), input.clone())
                     .unwrap();
             }
