@@ -41,10 +41,6 @@ struct Get {
 struct Replace {
     #[arg(short, long)]
     template: Option<String>,
-    #[arg(short, long)]
-    placeholder: Option<String>,
-    #[arg(short, long)]
-    replace_with: Option<String>,
 }
 
 fn main() {
@@ -80,8 +76,6 @@ fn main() {
                 src.push(_template);
                 commands::replace(
                     src,
-                    arg.placeholder.clone().unwrap(),
-                    arg.replace_with.clone().unwrap(),
                 )
                 .expect("Failed to replace placeholder in template");
                 println!("Replaced placeholder in template {}", _template);

@@ -2,6 +2,7 @@ use colored::Colorize;
 use std::{env, fs::read_dir, io, path::Path};
 
 use crate::utils;
+use crate::utils::list_tags_in_template;
 
 pub fn generate(template: impl AsRef<Path>) -> Result<(), Box<dyn std::error::Error>> {
     let dst = env::current_dir().unwrap();
@@ -34,10 +35,24 @@ pub fn get(template_dir: impl AsRef<Path>) -> Result<(), Box<dyn std::error::Err
 
 pub fn replace(
     path: impl AsRef<Path>,
-    placeholder: String,
-    replace_with: String,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    utils::replace_tag_with_string_all(path, placeholder.clone(), replace_with.clone()).unwrap();
+
+    let placeholders = utils::list_tags_in_template(path.as_ref()).unwrap();
+
+    println!("{:?}", placeholders);
+
+    for placeholder in placeholders {
+        let mut input = String::new();
+        println!("Provide a value for {} : ", placeholder.clone());
+        match io::stdin().read_line(&mut input) {
+            Ok(n) => {
+                utils::replace_tag_with_string_all(path.as_ref(), placeholder.clone(), input.clone()).unwrap();
+            }
+            Err(error) => println!("Failed to get user input. Error : {error}")
+        }
+
+    }
+
 
     Ok(())
 }
