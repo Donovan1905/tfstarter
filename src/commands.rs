@@ -39,8 +39,6 @@ pub fn replace(
 
     let placeholders = utils::list_tags_in_template(path.as_ref()).unwrap();
 
-    println!("{:?}", placeholders);
-
     for placeholder in placeholders {
         let mut input = String::new();
         println!("Provide a value for {} : ", placeholder.clone());
@@ -50,9 +48,6 @@ pub fn replace(
             }
             Err(error) => println!("Failed to get user input. Error : {error}")
         }
-
     }
-
-
     Ok(())
 }

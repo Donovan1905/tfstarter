@@ -45,7 +45,7 @@ pub fn list_tags_in_template (
         let entry = entry?;
         let ty = entry.file_type()?;
         if ty.is_dir() {
-            list_tags_in_template(entry.path())?;
+            all_placeholders = list_tags_in_template(entry.path())?;
         } else {
             let template = read_to_string(entry.path()).expect("Unable to read template file");
 
@@ -55,10 +55,8 @@ pub fn list_tags_in_template (
                 .collect();
 
             all_placeholders.extend(placeholders);
-
         }
     }
-    println!("{:?}", all_placeholders);
     Ok(all_placeholders)
 }
 
