@@ -1,7 +1,8 @@
 use clap::{Args, Parser, Subcommand};
 use colored::Colorize;
-use std::{env, fs, io, path::PathBuf};
+use std::{env, path::PathBuf};
 
+mod commands;
 mod init;
 mod utils;
 
@@ -16,6 +17,7 @@ struct Cli {
 enum Commands {
     Get(Get),
     Generate(Generate),
+    Replace(Replace),
 }
 
 #[derive(Args)]
@@ -35,6 +37,16 @@ struct Get {
     ttype: Option<String>,
 }
 
+#[derive(Args)]
+struct Replace {
+    #[arg(short, long)]
+    template: Option<String>,
+    #[arg(short, long)]
+    placeholder: Option<String>,
+    #[arg(short, long)]
+    replace_with: Option<String>,
+}
+
 fn main() {
     let cli = Cli::parse();
 
@@ -48,9 +60,8 @@ fn main() {
         Some(Commands::Generate(template)) => match template.template {
             Some(ref _template) => {
                 src.push(_template);
-                let dst = env::current_dir().unwrap();
-                utils::copy_dir_all(src, dst).unwrap();
-                println!("{}", _template);
+                commands::generate(src).expect("Failed to generate template");
+                println!("Template {} copied in current directory", _template);
             }
             None => {
                 println!("Error : missing template ref. See tfstarter generate -h");
@@ -58,27 +69,25 @@ fn main() {
         },
         Some(Commands::Get(ttype)) => match ttype.ttype {
             Some(ref _ttype) => {
-                let entries = fs::read_dir(src)
-                    .expect("Error : Failed to read templates folder")
-                    .map(|res| res.map(|e| e.path()))
-                    .collect::<Result<Vec<_>, io::Error>>()
-                    .unwrap();
-
-                for tpl in &entries {
-                    println!(
-                        "> {}",
-                        tpl.into_iter()
-                            .last()
-                            .unwrap()
-                            .to_str()
-                            .unwrap()
-                            .bold()
-                            .purple()
-                    )
-                }
+                commands::get(src).expect("Failed to list templates");
             }
             None => {
                 println!("Error : missing type")
+            }
+        },
+        Some(Commands::Replace(arg)) => match arg.template {
+            Some(ref _template) => {
+                src.push(_template);
+                commands::replace(
+                    src,
+                    arg.placeholder.clone().unwrap(),
+                    arg.replace_with.clone().unwrap(),
+                )
+                .expect("Failed to replace placeholder in template");
+                println!("Replaced placeholder in template {}", _template);
+            }
+            None => {
+                println!("Error : missing template ref. See tfstarter generate -h");
             }
         },
         None => {
