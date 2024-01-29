@@ -37,7 +37,7 @@ pub fn replace(
     placeholder: String,
     replace_with: String,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    utils::replace_tag_with_string(path, placeholder.clone(), replace_with.clone()).unwrap();
+    utils::replace_tag_with_string_all(path, placeholder.clone(), replace_with.clone()).unwrap();
 
     Ok(())
 }

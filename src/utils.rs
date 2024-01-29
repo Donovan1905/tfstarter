@@ -32,3 +32,20 @@ pub fn replace_tag_with_string(
 
     Ok(())
 }
+
+pub fn replace_tag_with_string_all(
+    src: impl AsRef<Path>,
+    tag: String,
+    replace_with: String,
+) -> Result<(), Box<dyn std::error::Error>> {
+    for entry in read_dir(src)? {
+        let entry = entry?;
+        let ty = entry.file_type()?;
+        if ty.is_dir() {
+            replace_tag_with_string_all(entry.path(), tag.clone(), replace_with.clone())?;
+        } else {
+            replace_tag_with_string(entry.path(), tag.clone(), replace_with.clone())?;
+        }
+    }
+    Ok(())
+}
