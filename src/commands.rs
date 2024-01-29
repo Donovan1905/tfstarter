@@ -33,20 +33,24 @@ pub fn get(template_dir: impl AsRef<Path>) -> Result<(), Box<dyn std::error::Err
     Ok(())
 }
 
-pub fn replace(
-    path: impl AsRef<Path>,
-) -> Result<(), Box<dyn std::error::Error>> {
+pub fn replace(path: impl AsRef<Path>) -> Result<(), Box<dyn std::error::Error>> {
+    let dst = env::current_dir().unwrap();
+    utils::copy_dir_all(path.as_ref(), dst.clone()).unwrap();
 
-    let placeholders = utils::list_tags_in_template(path.as_ref()).unwrap();
+    let placeholders = utils::list_tags_in_template(dst.clone()).unwrap();
 
     for placeholder in placeholders {
         let mut input = String::new();
-        println!("Provide a value for {} : ", placeholder.clone());
+        println!(
+            "Provide a value for {} : ",
+            placeholder.clone().bold().bright_purple()
+        );
         match io::stdin().read_line(&mut input) {
             Ok(n) => {
-                utils::replace_tag_with_string_all(path.as_ref(), placeholder.clone(), input.clone()).unwrap();
+                utils::replace_tag_with_string_all(dst.clone(), placeholder.clone(), input.clone())
+                    .unwrap();
             }
-            Err(error) => println!("Failed to get user input. Error : {error}")
+            Err(error) => println!("Failed to get user input. Error : {error}"),
         }
     }
     Ok(())

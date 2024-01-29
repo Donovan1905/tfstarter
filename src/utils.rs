@@ -1,8 +1,8 @@
+use regex::Regex;
 use std::collections::HashSet;
 use std::fs::{copy, create_dir_all, read_dir, read_to_string, write};
 use std::hash::Hash;
-use std::path::{Path};
-use regex::Regex;
+use std::path::Path;
 
 pub fn copy_dir_all(
     src: impl AsRef<Path>,
@@ -36,8 +36,8 @@ pub fn replace_tag_with_string(
     Ok(())
 }
 
-pub fn list_tags_in_template (
-    src: impl AsRef<Path>
+pub fn list_tags_in_template(
+    src: impl AsRef<Path>,
 ) -> Result<HashSet<String>, Box<dyn std::error::Error>> {
     let mut all_placeholders: HashSet<String> = HashSet::new();
     let re = Regex::new(r"\{\{(.+?)\}\}")?;
@@ -49,7 +49,8 @@ pub fn list_tags_in_template (
         } else {
             let template = read_to_string(entry.path()).expect("Unable to read template file");
 
-            let placeholders: HashSet<String> = re.captures_iter(&template)
+            let placeholders: HashSet<String> = re
+                .captures_iter(&template)
                 .filter_map(|cap| cap.get(1))
                 .map(|match_| match_.as_str().to_string())
                 .collect();
