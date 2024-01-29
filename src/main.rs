@@ -41,10 +41,6 @@ struct Get {
 struct Replace {
     #[arg(short, long)]
     template: Option<String>,
-    #[arg(short, long)]
-    placeholder: Option<String>,
-    #[arg(short, long)]
-    replace_with: Option<String>,
 }
 
 fn main() {
@@ -78,13 +74,11 @@ fn main() {
         Some(Commands::Replace(arg)) => match arg.template {
             Some(ref _template) => {
                 src.push(_template);
-                commands::replace(
-                    src,
-                    arg.placeholder.clone().unwrap(),
-                    arg.replace_with.clone().unwrap(),
-                )
-                .expect("Failed to replace placeholder in template");
-                println!("Replaced placeholder in template {}", _template);
+                commands::replace(src).expect("Failed to replace placeholder in template");
+                println!(
+                    "\nReplaced placeholder in template {}",
+                    _template.bold().green()
+                );
             }
             None => {
                 println!("Error : missing template ref. See tfstarter generate -h");

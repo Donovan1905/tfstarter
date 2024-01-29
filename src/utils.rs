@@ -1,5 +1,7 @@
+use regex::Regex;
+use std::collections::HashSet;
 use std::fs::{copy, create_dir_all, read_dir, read_to_string, write};
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 pub fn copy_dir_all(
     src: impl AsRef<Path>,
@@ -31,6 +33,31 @@ pub fn replace_tag_with_string(
     write(src, result).expect("Unable to write file");
 
     Ok(())
+}
+
+pub fn list_tags_in_template(
+    src: impl AsRef<Path>,
+) -> Result<HashSet<String>, Box<dyn std::error::Error>> {
+    let mut all_placeholders: HashSet<String> = HashSet::new();
+    let re = Regex::new(r"\{\{(.+?)\}\}")?;
+    for entry in read_dir(src.as_ref())? {
+        let entry = entry?;
+        let ty = entry.file_type()?;
+        if ty.is_dir() {
+            all_placeholders = list_tags_in_template(entry.path())?;
+        } else {
+            let template = read_to_string(entry.path()).expect("Unable to read template file");
+
+            let placeholders: HashSet<String> = re
+                .captures_iter(&template)
+                .filter_map(|cap| cap.get(1))
+                .map(|match_| match_.as_str().to_string())
+                .collect();
+
+            all_placeholders.extend(placeholders);
+        }
+    }
+    Ok(all_placeholders)
 }
 
 pub fn replace_tag_with_string_all(
