@@ -4,6 +4,7 @@ use std::{env, fs, io, path::PathBuf};
 
 mod init;
 mod utils;
+mod commands;
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -16,7 +17,7 @@ struct Cli {
 enum Commands {
     Get(Get),
     Generate(Generate),
-    Replace(Replace)
+    Replace(Replace),
 }
 
 #[derive(Args)]
@@ -59,9 +60,8 @@ fn main() {
         Some(Commands::Generate(template)) => match template.template {
             Some(ref _template) => {
                 src.push(_template);
-                let dst = env::current_dir().unwrap();
-                utils::copy_dir_all(src, dst).unwrap();
-                println!("{}", _template);
+                commands::generate(src).expect("Failed to generate template");
+                println!("Template {} copied in current directory", _template);
             }
             None => {
                 println!("Error : missing template ref. See tfstarter generate -h");
@@ -96,7 +96,12 @@ fn main() {
             Some(ref _template) => {
                 src.push(_template);
                 println!("{:?}", src);
-                utils::replace_tag_with_string(src, arg.placeholder.as_ref().unwrap().to_owned(), arg.replace_with.as_ref().unwrap().to_owned()).unwrap();
+                utils::replace_tag_with_string(
+                    src,
+                    arg.placeholder.clone().unwrap(),
+                    arg.replace_with.clone().unwrap(),
+                )
+                .unwrap();
                 println!("{}", _template);
             }
             None => {

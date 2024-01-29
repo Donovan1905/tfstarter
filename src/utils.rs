@@ -1,4 +1,4 @@
-use std::fs::{create_dir_all, read_dir, copy, read_to_string, write};
+use std::fs::{copy, create_dir_all, read_dir, read_to_string, write};
 use std::path::{Path, PathBuf};
 
 pub fn copy_dir_all(
@@ -18,7 +18,11 @@ pub fn copy_dir_all(
     Ok(())
 }
 
-pub fn replace_tag_with_string(src: impl AsRef<Path>, tag: String, replace_with: String) -> Result<(), Box<dyn std::error::Error>> {
+pub fn replace_tag_with_string(
+    src: impl AsRef<Path>,
+    tag: String,
+    replace_with: String,
+) -> Result<(), Box<dyn std::error::Error>> {
     let template = read_to_string(src.as_ref()).expect("Unable to read template file");
 
     let full_tag = "{{".to_string() + &tag + "}}";
