@@ -78,14 +78,13 @@ fn main() {
         Some(Commands::Replace(arg)) => match arg.template {
             Some(ref _template) => {
                 src.push(_template);
-                println!("{:?}", src);
-                utils::replace_tag_with_string(
+                commands::replace(
                     src,
                     arg.placeholder.clone().unwrap(),
                     arg.replace_with.clone().unwrap(),
                 )
-                .unwrap();
-                println!("{}", _template);
+                .expect("Failed to replace placeholder in template");
+                println!("Replaced placeholder in template {}", _template);
             }
             None => {
                 println!("Error : missing template ref. See tfstarter generate -h");

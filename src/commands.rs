@@ -31,3 +31,13 @@ pub fn get(template_dir: impl AsRef<Path>) -> Result<(), Box<dyn std::error::Err
 
     Ok(())
 }
+
+pub fn replace(
+    path: impl AsRef<Path>,
+    placeholder: String,
+    replace_with: String,
+) -> Result<(), Box<dyn std::error::Error>> {
+    utils::replace_tag_with_string(path, placeholder.clone(), replace_with.clone()).unwrap();
+
+    Ok(())
+}
