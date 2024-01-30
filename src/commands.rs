@@ -1,5 +1,5 @@
 use colored::Colorize;
-use std::{env, fs::read_dir, io, path::Path};
+use std::{env, fs::{read_dir, remove_dir_all, remove_file}, io, path::Path};
 
 use crate::utils;
 
@@ -52,5 +52,24 @@ pub fn replace(path: impl AsRef<Path>) -> Result<(), Box<dyn std::error::Error>>
             Err(error) => println!("Failed to get user input. Error : {error}"),
         }
     }
+    Ok(())
+}
+
+pub fn update(src: impl AsRef<Path>) -> Result<(), Box<dyn std::error::Error>> {
+    let entries = read_dir(src.as_ref())?;
+
+    for entry in entries {
+        let entry = entry?;
+        let path = entry.path();
+
+        if path.is_dir() {
+            remove_dir_all(&path)?;
+        } else {
+            remove_file(&path)?;
+        }
+    }
+
+    utils::update_default_templates().expect("Failed to load default templates");
+
     Ok(())
 }

@@ -19,6 +19,7 @@ enum Commands {
     Get(Get),
     Generate(Generate),
     Replace(Replace),
+    Update(Update),
 }
 
 #[derive(Args)]
@@ -43,6 +44,10 @@ struct Replace {
     #[arg(short, long)]
     template: Option<String>,
 }
+
+#[derive(Args)]
+struct Update {  }
+
 
 fn main() {
     dotenv().ok();
@@ -87,6 +92,10 @@ fn main() {
                 println!("Error : missing template ref. See tfstarter generate -h");
             }
         },
+        Some(Commands::Update(_arg)) => {
+            commands::update(src).expect("Failed to update default templates folder");
+            println!("{}", "Successfully update templates !".green().bold());
+        }
         None => {
             println!("Please provide argument to use tfstarter. See tfstarter -h for help")
         }
