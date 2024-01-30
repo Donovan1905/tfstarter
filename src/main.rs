@@ -1,6 +1,7 @@
 use clap::{Args, Parser, Subcommand};
 use colored::Colorize;
 use std::{env, path::PathBuf};
+use dotenv::dotenv;
 
 mod commands;
 mod init;
@@ -44,6 +45,8 @@ struct Replace {
 }
 
 fn main() {
+    dotenv().ok();
+
     let cli = Cli::parse();
 
     init::init_app().expect("Failed to load templates");
