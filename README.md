@@ -51,3 +51,11 @@ tfstarter replace -t <template_name>
 ```
 
 The project files are copied to the current directory.
+
+### Update the default templates list
+
+To update the default templates list that are provided remotely, use :
+
+```
+tfstarter update
+```

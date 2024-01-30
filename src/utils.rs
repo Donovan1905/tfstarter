@@ -1,7 +1,8 @@
 use regex::Regex;
 use std::collections::HashSet;
-use std::fs::{copy, create_dir_all, read_dir, read_to_string, write};
-use std::path::Path;
+use std::{env, fs::{File, create_dir_all, copy, remove_file, read_dir, read_to_string, write}, path::{Path}, io};
+use zip::ZipArchive;
+
 
 pub fn copy_dir_all(
     src: impl AsRef<Path>,
@@ -76,3 +77,51 @@ pub fn replace_tag_with_string_all(
     }
     Ok(())
 }
+
+pub fn update_default_templates() -> Result<(), Box<dyn std::error::Error>> {
+    let home_dir = env::var("HOME")?;
+    let config_folder_path = Path::new(&home_dir).join(".tfstarter/");
+    let template_download_url = env::var("S3_TEMPLATE_URL").expect("Failed to get S3_TEMPLATE_URL var");
+
+    let mut response = reqwest::blocking::get(template_download_url)?;
+
+    let zip_path = Path::new("./templates.zip");
+
+    let mut out = File::create(zip_path).expect("failed to create file");
+    io::copy(&mut response, &mut out).expect("failed to copy content");
+
+    extract_zip(zip_path, config_folder_path.as_path().as_ref()).unwrap();
+
+    remove_file(zip_path).unwrap();
+
+    Ok(())
+}
+
+fn extract_zip(archive_path: &Path, destination: &Path) -> io::Result<()> {
+    // Open the zip file
+    let file = File::open(archive_path)?;
+    let mut zip = ZipArchive::new(file)?;
+
+    // Iterate over each file & directory in the archive
+    for i in 0..zip.len() {
+        let mut file = zip.by_index(i)?;
+        let outpath = destination.join(file.mangled_name());
+
+        if file.name().ends_with('/') {
+            // Create a directory
+            std::fs::create_dir_all(&outpath)?;
+        } else {
+            // Ensure the parent directory exists
+            if let Some(parent) = outpath.parent() {
+                if !parent.exists() {
+                    std::fs::create_dir_all(parent)?;
+                }
+            }
+            // Write file
+            let mut outfile = File::create(&outpath)?;
+            io::copy(&mut file, &mut outfile)?;
+        }
+    }
+    Ok(())
+}
+
