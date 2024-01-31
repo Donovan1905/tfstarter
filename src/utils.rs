@@ -33,7 +33,7 @@ pub fn replace_tag_with_string(
     let template = read_to_string(src.as_ref()).expect("Unable to read template file");
 
     let full_tag = "{{".to_string() + &tag + "}}";
-    let result = template.replace(&full_tag, &replace_with);
+    let result = template.replace(&full_tag, &replace_with.trim());
 
     write(src, result).expect("Unable to write file");
 
