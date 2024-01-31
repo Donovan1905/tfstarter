@@ -1,4 +1,4 @@
-use std::{env, fs::{create_dir_all}, path::{Path}};
+use std::{env, fs::create_dir_all, path::Path};
 
 extern crate reqwest;
 
@@ -12,6 +12,7 @@ pub fn init_app() -> Result<(), Box<dyn std::error::Error>> {
         create_dir_all(config_folder_path.clone())?;
         utils::update_default_templates().expect("Failed to load default templates");
         Ok(())
-    } else { Ok(()) }
+    } else {
+        Ok(())
+    }
 }
-

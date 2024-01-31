@@ -1,8 +1,12 @@
 use regex::Regex;
 use std::collections::HashSet;
-use std::{env, fs::{File, create_dir_all, copy, remove_file, read_dir, read_to_string, write}, path::{Path}, io};
+use std::{
+    env,
+    fs::{copy, create_dir_all, read_dir, read_to_string, remove_file, write, File},
+    io,
+    path::Path,
+};
 use zip::ZipArchive;
-
 
 pub fn copy_dir_all(
     src: impl AsRef<Path>,
@@ -81,7 +85,8 @@ pub fn replace_tag_with_string_all(
 pub fn update_default_templates() -> Result<(), Box<dyn std::error::Error>> {
     let home_dir = env::var("HOME")?;
     let config_folder_path = Path::new(&home_dir).join(".tfstarter/");
-    let template_download_url = env::var("S3_TEMPLATE_URL").expect("Failed to get S3_TEMPLATE_URL var");
+    let template_download_url =
+        env::var("S3_TEMPLATE_URL").expect("Failed to get S3_TEMPLATE_URL var");
 
     let mut response = reqwest::blocking::get(template_download_url)?;
 
@@ -124,4 +129,3 @@ fn extract_zip(archive_path: &Path, destination: &Path) -> io::Result<()> {
     }
     Ok(())
 }
-

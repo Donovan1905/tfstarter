@@ -1,7 +1,7 @@
 use clap::{Args, Parser, Subcommand};
 use colored::Colorize;
-use std::{env, path::PathBuf};
 use dotenv::dotenv;
+use std::{env, path::PathBuf};
 
 mod commands;
 mod init;
@@ -46,8 +46,7 @@ struct Replace {
 }
 
 #[derive(Args)]
-struct Update {  }
-
+struct Update {}
 
 fn main() {
     dotenv().ok();

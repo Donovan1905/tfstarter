@@ -1,5 +1,10 @@
 use colored::Colorize;
-use std::{env, fs::{read_dir, remove_dir_all, remove_file}, io, path::Path};
+use std::{
+    env,
+    fs::{read_dir, remove_dir_all, remove_file},
+    io,
+    path::Path,
+};
 
 use crate::utils;
 
