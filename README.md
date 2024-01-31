@@ -1,8 +1,8 @@
-# tfstarter
+# ⚙️ tfstarter - Bootstrap Terraform projects based on multiple templates 🚀
 
-CLI Tools to start terraform project from templates - Powered by Rust
+*Powered by Rust*
 
-The tool is currently on development, if you think that a feature needs to be added, do no hesitate to create an issue.
+The tool is currently on development, if you think that a feature/template needs to be added, do not hesitate to create an issue.
 
 ## Install
 
@@ -15,15 +15,15 @@ cargo install tfstarter
 
 ## Usage
 
-### Add a templates
+### Add custom templates
 
-Pre configured templates are WIP. For now you can add manualy your Terraform project in `~/.tfstarter/` (note that the directory name that you choose will define the key to use when using this template).
+You can add manually your own Terraform projects in `~/.tfstarter/` (note that the directory name that you choose will define the key to use when using this template).
 
 If you want to add placeholder to your templates use the following format : 
 ```
 {{placeholder_name}}
 ```
-It will be automatically recognized and you will be prompted for the value.
+It will be automatically recognized, and you will be prompted for the value when using the template.
 
 
 ### List the templates
@@ -38,23 +38,15 @@ tfstarter get
 
 Go to the target directory of your project and generate the terraform project by using :
 
-This command will simply copy the files of the template directory to your current directory.
+This command will simply copy the files of the template directory to your current directory. You will be prompted for the value of each tag present in the template files.
 
 ```
-tfstarter generate -t <template_name>
+tfstarter new -t <template_name>
 ```
-
-Use this one in case you referenced placeholders in your templates files : 
-
-```
-tfstarter replace -t <template_name>
-```
-
-The project files are copied to the current directory.
 
 ### Update the default templates list
 
-To update the default templates list that are provided remotely, use :
+To update the default templates list that is provided remotely, use :
 
 ```
 tfstarter update

@@ -8,12 +8,6 @@ use std::{
 
 use crate::utils;
 
-pub fn generate(template: impl AsRef<Path>) -> Result<(), Box<dyn std::error::Error>> {
-    let dst = env::current_dir().unwrap();
-    utils::copy_dir_all(template, dst).unwrap();
-    Ok(())
-}
-
 pub fn get(template_dir: impl AsRef<Path>) -> Result<(), Box<dyn std::error::Error>> {
     let entries = read_dir(template_dir)
         .expect("Error : Failed to read templates folder")

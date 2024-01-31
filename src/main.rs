@@ -17,13 +17,12 @@ struct Cli {
 #[derive(Subcommand)]
 enum Commands {
     Get(Get),
-    Generate(Generate),
-    Replace(Replace),
+    New(New),
     Update(Update),
 }
 
 #[derive(Args)]
-struct Generate {
+struct New {
     #[arg(
         short,
         long,
@@ -40,13 +39,8 @@ struct Get {
 }
 
 #[derive(Args)]
-struct Replace {
-    #[arg(short, long)]
-    template: Option<String>,
-}
-
-#[derive(Args)]
 struct Update {}
+
 
 fn main() {
     dotenv().ok();
@@ -60,11 +54,14 @@ fn main() {
     src.push(".tfstarter/");
 
     match &cli.cmd {
-        Some(Commands::Generate(template)) => match template.template {
+        Some(Commands::New(template)) => match template.template {
             Some(ref _template) => {
                 src.push(_template);
-                commands::generate(src).expect("Failed to generate template");
-                println!("Template {} copied in current directory", _template);
+                commands::replace(src).expect("Failed to replace placeholder in template");
+                println!(
+                    "\nReplaced placeholder in template {}, copied in current directory",
+                    _template.bold().green()
+                );
             }
             None => {
                 println!("Error : missing template ref. See tfstarter generate -h");
@@ -76,19 +73,6 @@ fn main() {
             }
             None => {
                 println!("Error : missing type")
-            }
-        },
-        Some(Commands::Replace(arg)) => match arg.template {
-            Some(ref _template) => {
-                src.push(_template);
-                commands::replace(src).expect("Failed to replace placeholder in template");
-                println!(
-                    "\nReplaced placeholder in template {}",
-                    _template.bold().green()
-                );
-            }
-            None => {
-                println!("Error : missing template ref. See tfstarter generate -h");
             }
         },
         Some(Commands::Update(_arg)) => {
