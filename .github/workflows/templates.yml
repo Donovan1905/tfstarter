@@ -20,7 +20,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: templates.zip
-          path: templates.zip
+          path: ./templates/templates.zip
   push:
     needs: zip
     runs-on: ubuntu-latest
