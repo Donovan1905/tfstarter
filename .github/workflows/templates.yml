@@ -13,8 +13,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Go to templates
+        run: cd ./templates
+
       - name: Zip Files
-        run: zip -r templates.zip ./templates/*
+        run: zip -r templates.zip *
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
