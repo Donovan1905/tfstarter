@@ -51,6 +51,7 @@ pub fn list_tags_in_template(
         if ty.is_dir() {
             all_placeholders = list_tags_in_template(entry.path())?;
         } else {
+            println!("{:?}", entry.path());
             let template = read_to_string(entry.path()).expect("Unable to read template file");
 
             let placeholders: HashSet<String> = re
