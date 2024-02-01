@@ -1,6 +1,6 @@
-# tfstarter
+#  tfstarter - Bootstrap your Terraform project with custom template 🚀
 
-CLI Tools to start terraform project from templates - Powered by Rust
+*Powered by Rust* ⚙️
 
 The tool is currently on development, if you think that a feature needs to be added, do no hesitate to create an issue.
 
@@ -41,20 +41,12 @@ Go to the target directory of your project and generate the terraform project by
 This command will simply copy the files of the template directory to your current directory.
 
 ```
-tfstarter generate -t <template_name>
+tfstarter new -t <template_name>
 ```
-
-Use this one in case you referenced placeholders in your templates files : 
-
-```
-tfstarter replace -t <template_name>
-```
-
-The project files are copied to the current directory.
 
 ### Update the default templates list
 
-To update the default templates list that are provided remotely, use :
+To update the default templates list that is provided remotely, use :
 
 ```
 tfstarter update
